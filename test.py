@@ -7,6 +7,10 @@ from psycopg2 import errorcodes
 from datetime import datetime
 
 def post(data):
+    #reveived data format: {"order":{“first_name”:”Lisa”,”e-mail”:”lisa@gmail.com”,
+                            #“item”:
+                            #{“A001”:”1”, “A002”:“1”}   #”品號”:”數量”
+                            #}}
     #data = request.get_json()
     if data.get("order", None) == None:
         return {"message":"input data invalid!"}
@@ -102,11 +106,12 @@ def post(data):
         unitPrice = cur.fetchone()[0]
         unitPrice = float(unitPrice)
         orderSeq += 1
-        #try:
-        cur.execute(l_sql5,(orderId,orderSeq,productId,unitPrice,Quantity,Quantity*unitPrice,0,"Y"))
-        #except Exception as e:
-        #    db.close()
-        #    return {"message":errorcodes.lookup(e.pgcode)}
+
+        try:
+            cur.execute(l_sql5,(orderId,"{}-{:03}".format(orderId, orderSeq),productId,unitPrice,Quantity,Quantity*unitPrice,0,"Y"))
+        except Exception as e:
+            db.close()
+            return {"message":errorcodes.lookup(e.pgcode)}
 
         #update  StockQty
         l_sql6 = "UPDATE Product SET StockQty = StockQty - %s"
@@ -116,8 +121,6 @@ def post(data):
             db.close()
             return {"message":errorcodes.lookup(e.pgcode)}
 
-    db.commit()
-    cur = db.cursor()
 
     #Generate Sendmail ID
     try:
@@ -160,8 +163,10 @@ def post(data):
     except Exception as e:
         db.close()
         return {"message":errorcodes.lookup(e.pgcode)}
+    db.commit()
     db.close()
     return {"message":"The order has been received!"}
+
 
 
 

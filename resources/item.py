@@ -178,7 +178,7 @@ class ItemBuy(Resource):
             orderSeq += 1
 
             try:
-                cur.execute(l_sql5,(orderId,orderSeq,productId,unitPrice,Quantity,Quantity*unitPrice,0,"Y"))
+                cur.execute(l_sql5,(orderId,"{}-{:03}".format(orderId,orderSeq),productId,unitPrice,Quantity,Quantity*unitPrice,0,"Y"))
             except Exception as e:
                 db.close()
                 return {"message":errorcodes.lookup(e.pgcode)}
@@ -190,9 +190,6 @@ class ItemBuy(Resource):
             except Exception as e:
                 db.close()
                 return {"message":errorcodes.lookup(e.pgcode)}
-
-        db.commit()
-        cur = db.cursor()
 
         #Generate Sendmail ID
         try:
@@ -235,5 +232,6 @@ class ItemBuy(Resource):
         except Exception as e:
             db.close()
             return {"message":errorcodes.lookup(e.pgcode)}
+        db.commit()
         db.close()
         return {"message":"The order has been received!"}
