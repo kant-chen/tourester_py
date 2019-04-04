@@ -19,41 +19,6 @@
 		<td><label>品名 </label> </td>
         <td><label>庫存數量 </label></td>
       </tr>
-      <tr>
-	  <tr>
-        <td>
-			<input type="checkbox" name="checkbox" id="chk_buy">
-  			<label for="chk_buy">Buy </label>  
-		</td>
-		  
-		<td>A001</td>
-		<td><label>蘋果</label> </td>
-        <td>123</td>
-      </tr>
-      <tr>
-        <td><input type="checkbox" name="checkbox" id="chk_buy">
-  			<label for="chk_buy">Buy </label>
-		</td>
-        <td>A002</td>
-		<td><label>香蕉</label> </td>
-        <td>224</td>
-      </tr>
-      <tr>
-        <td><input type="checkbox" name="checkbox" id="chk_buy">
-  			<label for="chk_buy">Buy </label>
-		 </td>
-        <td>A003</td>
-		<td><label>蕃茄</label> </td>
-        <td>237</td>
-      </tr>
-      <tr>
-        <td><input type="checkbox" name="checkbox" id="chk_buy">
-  			<label for="chk_buy">Buy </label>
-		</td>
-        <td>A004</td>
-		<td><label>芭樂</label> </td>
-        <td>43</td>
-      </tr>
     </tbody>
   </table>
 	<p>&nbsp;</p>
@@ -155,19 +120,53 @@
 	 }
      function init(){
      //執行request完畢後要做的事
-          var f_response = function(response){
-            console.log(response)
-            var message = JSON.parse(response)
-                if (message['item_list']){
-                message = message['item_list']
-                alert(message);
+      var f_response = function(response){
+      
+        var item_list = fetch(response);
+        if (item_list == false){
+            alert(response)
+            return;
             }
-                else{
-                alert(response);
-                }
+        
+        
         }
-         http_request(null,"items", "GET", f_response);
+        http_request(null,"items", "GET", f_response);    
     }
+     
+    
+     function fetch(json){
+        var item_list = JSON.parse(json)
+        if (! item_list['item_list']){
+            return false
+        }
+        item_list = item_list['item_list']
+        //拆解品號、品名、庫存數量並顯示於網頁中
+        var ProductId, ProductName1, StockQty
+        var row, cell1, cell2, cell3, cell4, new_chkbox
+        var table = document.getElementById('table1')
+        //var len = table.rows.length
+        for (var i = 0, item;item = item_list[i]; i++){
+            ProductId = item["ProductId"];
+            ProductName1 = item["ProductName1"];
+            StockQty = item["StockQty"];
+            row = table.insertRow(i+1)
+            cell1 = row.insertCell(0)
+            cell2 = row.insertCell(1)
+            cell3 = row.insertCell(2)
+            cell4 = row.insertCell(3)
+            
+            new_chkbox = document.createElement("INPUT");
+            new_chkbox.setAttribute("type", "checkbox");
+            cell1.appendChild(new_chkbox)
+            cell2.innerHTML = ProductId
+            cell3.innerHTML = ProductName1
+            cell4.innerHTML = StockQty
+            
+            if ( i >= item_list.length - 1){
+                break;
+                }
+            }
+     }
     init();
     </script>
 </form>

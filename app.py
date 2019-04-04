@@ -1,24 +1,15 @@
 from flask import Flask, render_template
 from flask_restful import Api, Resource
-#from flask_jwt import JWT
 
-#from security import authenticate, identity
 from resources.item import ItemList, ItemBuy
 
 app = Flask(__name__)
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
-#app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-#app.config['PROPAGATE_EXCEPTIONS'] = True
+
 app.secret_key = 'kant'
 api = Api(app)
 
 
-#@app.before_first_request
-#def create_tables():
-#    db.create_all()
 
-
-#jwt = JWT(app, authenticate, identity)  # /auth
 @app.route('/')
 def home():
     return render_template('index.html')
