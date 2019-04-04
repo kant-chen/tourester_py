@@ -7,17 +7,13 @@ from psycopg2 import errorcodes
 from datetime import datetime
 
 def post(data):
-    #reveived data format: {"order":{“first_name”:”Lisa”,”e-mail”:”lisa@gmail.com”,
-                            #“item”:
-                            #{“A001”:”1”, “A002”:“1”}   #”品號”:”數量”
-                            #}}
     #data = request.get_json()
     if data.get("order", None) == None:
         return {"message":"input data invalid!"}
 
     order = data.get("order")
     first_name = order['first_name']
-    e_mail = order['e-mail']
+    e_mail = order['e_mail']
     items = order['item']
 
     #connect_db
@@ -108,7 +104,7 @@ def post(data):
         orderSeq += 1
 
         try:
-            cur.execute(l_sql5,(orderId,"{}-{:03}".format(orderId, orderSeq),productId,unitPrice,Quantity,Quantity*unitPrice,0,"Y"))
+            cur.execute(l_sql5,(orderId,"{}-{:03}".format(orderId,orderSeq),productId,unitPrice,Quantity,Quantity*unitPrice,0,"Y"))
         except Exception as e:
             db.close()
             return {"message":errorcodes.lookup(e.pgcode)}
@@ -120,7 +116,6 @@ def post(data):
         except Exception as e:
             db.close()
             return {"message":errorcodes.lookup(e.pgcode)}
-
 
     #Generate Sendmail ID
     try:
@@ -170,6 +165,6 @@ def post(data):
 
 
 
-l_dict = {"order":{"first_name":"Lisa","e-mail":"lisa@gmail.com","item":{"A001":"1","A002":"2"}}}
+l_dict = {"order":{"first_name":"kant2","e_mail":"kant2@gg","item":{"A002":1}}}
 #l_json = jsonify(l_dict)
 l_message = post(l_dict)

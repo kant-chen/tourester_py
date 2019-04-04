@@ -1,5 +1,5 @@
-from flask import Flask
-from flask_restful import Api
+from flask import Flask, render_template
+from flask_restful import Api, Resource
 #from flask_jwt import JWT
 
 #from security import authenticate, identity
@@ -19,7 +19,13 @@ api = Api(app)
 
 
 #jwt = JWT(app, authenticate, identity)  # /auth
+@app.route('/')
+def home():
+    return render_template('index.html')
 
+@app.route('/test')
+def test():
+    return render_template('test.html')
 
 api.add_resource(ItemList, '/items')
 api.add_resource(ItemBuy, '/buy')

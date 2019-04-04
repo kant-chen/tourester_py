@@ -77,7 +77,7 @@ class ItemList(Resource):
 
 class ItemBuy(Resource):
     def post(self):
-        #reveived data format: {"order":{“first_name”:”Lisa”,”e-mail”:”lisa@gmail.com”,
+        #reveived data format: {"order":{“first_name”:”Lisa”,”e_mail”:”lisa@gmail.com”,
                                 #“item”:
                                 #{“A001”:”1”, “A002”:“1”}   #”品號”:”數量”
                                 #}}
@@ -87,7 +87,7 @@ class ItemBuy(Resource):
 
         order = data.get("order")
         first_name = order['first_name']
-        e_mail = order['e-mail']
+        e_mail = order['e_mail']
         items = order['item']
 
         #connect_db
